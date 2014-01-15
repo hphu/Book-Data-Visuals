@@ -1,12 +1,133 @@
-//23786660 book count total
+
 var book_count_total = 23786660;
 var color = d3.scale.ordinal().range(["#19304D","#2E5D8A","#6285CB","#B6C9E7","#A0C0B6","#7EA993","#4D714B","#253729","#464931","#71684B","#958C50","#BFBD88","#B4632D","#8F3724","#85170F","#3D1431","#67225C","#76427B","#39846D","#48A883","#8DBF69","#DEE82C","#A2CB0B","#676E1C","#612C00","#452208","#45130C","#15281C","#19570A", "#D63600", "#A80000"]);
-var width =1000,	
-height = 700;
+var width =1000, //default graph width
+height = 700; //default graph height
 
 
 $(document).ready( function(){
 
+bubble_chart();
+line_graph();
+
+});
+
+function line_graph(){
+	var margin = {top:70, bottom:60, left:140, right:50};
+	var width = 1400; //overwrite default width
+	d3.json("date_counts.json", function(root){
+		//init scale for x data to map range to the graph dimensions
+		var scalex = d3.scale.linear()
+						.range([0,width-margin.left-margin.right])
+						.domain([1750,2014]);
+
+		//init axis with scale data to graph dimensions
+		var xaxis = d3.svg.axis()
+						.scale(scalex)
+						.orient("bottom");
+
+		//init scale for y data
+		var scaley = d3.scale.linear()
+						.range([height-margin.top-margin.bottom,0])
+						.domain([0,(d3.entries(root).sort(function(a, b) { return d3.descending(a.value.value, b.value.value); })[0].value.value)]);
+
+		//init yaxis with scalar
+		var yAxis = d3.svg.axis()
+				    .scale(scaley)
+				    .orient("left");
+
+		//function variable that will generate line coordinates based on data
+		var line = d3.svg.line()
+		    .x(function(d) { return scalex(d.year); })
+		    .y(function(d) { return scaley(d.value); });
+
+		//create initial svg with margins
+		var graph = d3.select("#line").append("svg")
+							.attr("width", width)
+							.attr("height", height)
+						.append("g")
+							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		
+		//generate x axis
+		graph.append("g")
+			.attr("class", "x axis")
+		    .style("fill", "#8A8A8A")
+			.attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+			.call(xaxis);
+
+		//generate y axis
+		graph.append("g")
+			.attr("class", "y axis")
+		    .style("fill", "#8A8A8A")
+			.call(yAxis)
+	   		.append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".75em")
+		      .style("fill", "#8A8A8A")
+		      .style("text-anchor", "end")
+		      .text("Books Published");
+
+		//add grid lines for y axis
+		graph.selectAll("line.gridy").data(scaley.ticks(10)).enter()
+			    .append("line")
+			        .attr("class","gridy")
+			        .attr("x1", 0)
+			        .attr("x2",width)
+			        .attr("y1", function(d){ return scaley(d);})
+			        .attr("y2", function(d){ return scaley(d);})
+			        .attr("fill", "none");
+
+		//add grid lines for x axis
+		graph.selectAll("line.gridx").data(scalex.ticks(13)).enter()
+			    .append("line")
+			        .attr("class","gridx")
+			        .attr("x1", function(d){return scalex(d);})
+			        .attr("x2", function(d){return scalex(d);})
+			        .attr("y1", 0)
+			        .attr("y2", height-margin.top-margin.bottom)
+			        .attr("fill", "none");
+
+		//draw line graph
+	    graph.append("path")
+		      .datum(root)
+		      .attr("class", "line")
+		      .attr("d", line);
+
+		//draws circle for each data point
+		graph.selectAll("circle")
+				.data(root)
+			.enter().append("circle")
+				.style("fill", "#C95DF0")
+				.attr("cx", function(d){return scalex(d.year);})
+        		.attr("cy", function(d){return scaley(d.value);})
+        		.attr("r", 3)
+        		.attr("stroke", "#B641E0")
+        		.attr("stroke-width", "1px")
+			    .on("mouseover", function(d){
+			    	d3.select(this).transition()
+			    		.attr("stroke-width", "32px");
+
+			    	var point = "(" + d.year + "," + d.value+")";
+			    	graph.append("text") //displays coordinate text above circle when hover
+			    		.attr("class", "coordinate")
+			    		.style("text-anchor", "middle")
+			    		.attr("fill", "white")
+    					.attr("x", scalex(d.year))
+						.attr("y", scaley(d.value)-40)
+			    		.text(function(d){return point;});
+			    })
+			    .on("mouseout", function(d){
+			    	d3.select(this).transition()
+			    		.attr("stroke-width", "1px");
+			    	d3.select((".coordinate")).remove();
+			    });
+
+	});
+}
+
+
+function bubble_chart(){
 
 var bubble = d3.layout.pack()
 				.size([width, height])
@@ -47,7 +168,8 @@ var catcount = d3.json("category_counts.json", function(root){
 				.attr("y", function(d,i){ return (i+1)*20 ; })
 				.text(function(d){return d.name});
 
-	});
+	});	
+}
 
 function MouseOver(){
 	var that = this;
@@ -145,7 +267,3 @@ function MouseOut(){
 	d3.select(".info").remove();
 	document.getElementById("pieinfo").innerHTML = "";
 }
-
-
-
-});

@@ -1,5 +1,6 @@
 '''
 Scripts to parse and gather data from dump
+python 2.7
 '''
 
 import json
@@ -29,7 +30,7 @@ def generatejson():
 def category_pages():
         data = open("/Users/Majestic/Desktop/newjson.txt", "r")
         categorypagedict = dict()
-        countpercategory = dict()
+        countpercategory = dict() #for computing averages
         for line in data:
                 line = json.loads(line)
                 mng = managesubjectpg(categorypagedict, countpercategory, line)
@@ -38,7 +39,7 @@ def category_pages():
         print categorypagedict
         print countpercategory
         data2 = open("/Users/Majestic/Desktop/category_page_counts.txt", "w")
-        for (category, count) in categorydict.items():
+        for (category, count) in categorypagedict.items():
                 data2.write(category + " " + str(count) + "\n")
         data2.close()
         data.close()
@@ -155,11 +156,11 @@ def publish_dates():
 
 def jsontxt():
         data = open("/Users/Majestic/Desktop/category_counts.txt", "r")
-        print "{ \n"
+        print "[ \n"
         for line in data:
                 line = line.split()
-                print '{ "name": "%s", "count": %s },' % ("".join(line[:-1]), line[-1:][0])
-        print "}"
+                print '{ "name": "%s", "value": %s },' % ("".join(line[:-1]), line[-1:][0])
+        print "]"
         data.close()
 
 category_pages()
