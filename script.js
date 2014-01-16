@@ -106,7 +106,7 @@ function line_graph(){
         		.attr("stroke-width", "1px")
 			    .on("mouseover", function(d){
 			    	d3.select(this).transition()
-			    		.attr("stroke-width", "32px");
+			    		.attr("stroke-width", "18px");
 
 			    	var point = "(" + d.year + "," + d.value+")";
 			    	graph.append("text") //displays coordinate text above circle when hover
@@ -217,7 +217,7 @@ function MouseOver(){
 												return that.style.fill;
 											} else {
 												var x = d.value
-												while (color(x) === that.style.fill){
+												while (color(x) == that.style.fill){
 													x = d.value*Math.random();
 												}
 											return color(x);
