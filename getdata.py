@@ -60,8 +60,11 @@ def managesubjectpg(thedict, countdict, line):
                                 try:
                                         thedict = addtodict(thedict, x, int(line["number_of_pages"]))
                                         countdict = addtodict(countdict,x)
+                                        if int(line["number_of_pages"]) > 400:
+                                                print "%d %s" % (x, int(line["number_of_pages"]))
+                                        break
                                 except:
-                                        pass
+                                        break
                 if matchany == False:
                         try:
                                 thedict = addtodict(thedict, 'Other', int(line["number_of_pages"]))
@@ -89,7 +92,7 @@ def category_count():
 
 def managesubjects(thedict, booksubjects):
         matchany = False
-        listofsubjects = ['Art', 'Architecture', 'Photography', 'Bible', 'Religio', 'Christian', 'Judaism', 'Biography', 'Business', 'Computer', 'Computing' , 'Technology', 'Food', 'Cook', 'Crafts', 'Education', 'Engineering', 'Foreign Language', 'Gay & Lesbian', 'Health', 'Fitness', 'Law', 'Medical', 'Music', 'Film', 'Theater', 'Spiritual', 'Nonfiction', 'Parenting', 'Philosophy', 'Politics', 'Psychology', 'Relationships', 'Nature', 'Social Science', 'Sports', 'Travel', 'Fiction', 'Horror', 'Mystery', 'Poetry', 'Literature', 'Romance', 'Fantasy', 'Thriller', 'Western', 'Science Fiction', 'History', 'Economic', 'Social', 'Science', 'Political', 'Statistics', 'Mathematic', 'Geneoalogy', 'Government', 'Transportation', 'Chemistry', 'Sociology', 'Physics', 'Geology', 'Biology', 'Humor', 'Environmental']  
+        listofsubjects = [ 'Architecture', 'Photography', 'Bible', 'Religio', 'Christian', 'Judaism', 'Biography', 'Business', 'Computer', 'Computing' , 'Technology', 'Food', 'Cook', 'Crafts', 'Education', 'Engineering', 'Foreign Language', 'Gay & Lesbian', 'Health', 'Fitness', 'Law', 'Medical', 'Music', 'Film', 'Theater', 'Spiritual', 'Nonfiction', 'Parenting', 'Philosophy', 'Politics', 'Psychology', 'Relationships', 'Nature', 'Social Science', 'Sports', 'Travel', 'Fiction', 'Horror', 'Mystery', 'Poetry', 'Literature', 'Romance', 'Fantasy', 'Thriller', 'Western', 'Science Fiction', 'History', 'Economic', 'Social', 'Science', 'Political', 'Statistics', 'Mathematic', 'Geneoalogy', 'Government', 'Transportation', 'Chemistry', 'Sociology', 'Physics', 'Geology', 'Biology', 'Humor', 'Environmental','Art']  
         if booksubjects == 'unlisted':
                 thedict = addtodict(thedict,'Unlisted')
         else:
@@ -97,6 +100,7 @@ def managesubjects(thedict, booksubjects):
                         if subjecthelper(x, booksubjects):
                                 matchany = True
                                 thedict = addtodict(thedict, x)
+                                break
                 if matchany == False:
                         thedict = addtodict(thedict, 'Other')
 
@@ -155,7 +159,7 @@ def publish_dates():
         listdata.close()
 
 def jsontxt():
-        data = open("/Users/Majestic/Desktop/category_counts.txt", "r")
+        data = open("/Users/Majestic/Desktop/category_pagecounts.txt", "r")
         print "[ \n"
         for line in data:
                 line = line.split()
@@ -163,4 +167,4 @@ def jsontxt():
         print "]"
         data.close()
 
-category_pages()
+jsontxt()

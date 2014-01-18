@@ -9,7 +9,7 @@ $(document).ready( function(){
 
 bubble_chart();
 line_graph();
-
+bar_graph();
 });
 
 function line_graph(){
@@ -48,26 +48,6 @@ function line_graph(){
 						.append("g")
 							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
-		//generate x axis
-		graph.append("g")
-			.attr("class", "x axis")
-		    .style("fill", "#8A8A8A")
-			.attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
-			.call(xaxis);
-
-		//generate y axis
-		graph.append("g")
-			.attr("class", "y axis")
-		    .style("fill", "#8A8A8A")
-			.call(yAxis)
-	   		.append("text")
-		      .attr("transform", "rotate(-90)")
-		      .attr("y", 6)
-		      .attr("dy", ".75em")
-		      .style("fill", "#8A8A8A")
-		      .style("text-anchor", "end")
-		      .text("Books Published");
-
 		//add grid lines for y axis
 		graph.selectAll("line.gridy").data(scaley.ticks(10)).enter()
 			    .append("line")
@@ -88,6 +68,26 @@ function line_graph(){
 			        .attr("y2", height-margin.top-margin.bottom)
 			        .attr("fill", "none");
 
+		//generate x axis
+		graph.append("g")
+			.attr("class", "x axis")
+		    .style("fill", "#8A8A8A")
+			.attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+			.call(xaxis);
+
+		//generate y axis
+		graph.append("g")
+			.attr("class", "y axis")
+		    .style("fill", "#8A8A8A")
+			.call(yAxis)
+	   		.append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".75em")
+		      .style("fill", "#8A8A8A")
+		      .style("text-anchor", "end")
+		      .text("Books Published");
+
 		//draw line graph
 	    graph.append("path")
 		      .datum(root)
@@ -106,7 +106,8 @@ function line_graph(){
         		.attr("stroke-width", "1px")
 			    .on("mouseover", function(d){
 			    	d3.select(this).transition()
-			    		.attr("stroke-width", "18px");
+			   			.style("fill", "white")
+			    		.attr("stroke-width", "20px");
 
 			    	var point = "(" + d.year + "," + d.value+")";
 			    	graph.append("text") //displays coordinate text above circle when hover
@@ -119,6 +120,7 @@ function line_graph(){
 			    })
 			    .on("mouseout", function(d){
 			    	d3.select(this).transition()
+	    				.style("fill", "#C95DF0")
 			    		.attr("stroke-width", "1px");
 			    	d3.select((".coordinate")).remove();
 			    });
@@ -216,10 +218,11 @@ function MouseOver(){
 				.style("fill", function(d){ if(d.data.name!="Books"){
 												return that.style.fill;
 											} else {
-												var x = d.value
-												while (color(x) == that.style.fill){
-													x = d.value*Math.random();
+												var x = d.data.value
+												while (color(x) == that.style.fill.toUpperCase()){//TODO: doesn't match for equivalent hex & rgb values causing same color
+													x = d.data.value*Math.random();
 												}
+											console.log(color(x) + " " + that.style.fill.toUpperCase());
 											return color(x);
 											}
 											});
@@ -266,4 +269,87 @@ function MouseOut(){
 	parent.getElementsByTagName("rect")[0].setAttribute("stroke-width", "0em");
 	d3.select(".info").remove();
 	document.getElementById("pieinfo").innerHTML = "";
+}
+
+
+
+function bar_graph(){
+	var margin = {top:50, bottom:50, left:180, right:15};
+	var width = 1100;
+	var scaler = d3.scale.linear()
+					.range([height-100,0]);
+
+	var graph = d3.select("#bar")
+					.attr("width", width+margin.left+margin.right)
+					.attr("height", height+margin.top+margin.bottom)
+				.append("g")
+					.attr("transform", "translate("+ margin.left+"," + margin.top + ")");
+
+
+	var avgpg = d3.json("category_pagecounts.json", function(root){
+		var descendingdata = d3.entries(root).sort(function(a,b){return d3.descending(a.value.value,b.value.value);});
+		var datalength = Object.keys(descendingdata).length-1;
+		scaler.domain([descendingdata[datalength].value.value, descendingdata[0].value.value]);
+
+		var yaxis = d3.svg.axis()
+		    .scale(d3.scale.linear()
+				.range([height,0])
+				.domain([descendingdata[datalength].value.value, descendingdata[0].value.value]))
+		    .orient("left");
+
+		var xaxis = d3.svg.axis()
+						.scale(d3.scale.linear()
+							.range([0,width]))
+					 	.tickFormat("")
+						.orient("bottom");
+
+		var color = d3.scale.linear()
+	    .domain([descendingdata[datalength].value.value, descendingdata[datalength/2].value.value, descendingdata[0].value.value])
+	    .range(["orange", "yellow", "white"]);
+
+		var barwidth = width / d3.entries(root).length;
+
+		var bar = graph.selectAll("g")
+						.data(root)
+					.enter().append("g")
+						.attr("transform", function(d,i){ return "translate(" + (i+.3) * barwidth + ",0)"; })
+					.append("rect")
+						.attr("width", barwidth-2)
+						.attr("fill", function(d){ return color(d.value);})
+						.attr("height", function(d){return height-scaler(d.value); })
+						.attr("y", function(d) {return scaler(d.value); })
+					    .on("mouseover", function(d){
+					    	d3.select(this).transition().attr("fill", "crimson");
+					    })
+					    .on("mouseout", function(d){
+					    	d3.select(this).transition().attr("fill", function(d){ return color(d.value);});
+					    });
+
+		graph.selectAll("g")
+					.append("text")
+					.attr("dy", ".25em")
+					.attr("dx", ".25em")
+					.attr("transform", function(d){ return "translate(" + barwidth/2 + ","+ height +") rotate(-90)"; })
+					.text(function(d) {return d.name});
+
+		graph.append("g")
+		      .attr("class", "y axis")
+  		      .style("fill", "#8A8A8A")
+		      .call(yaxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+ 		      .style("fill", "#8A8A8A")
+		      .style("text-anchor", "end")
+		      .text("Average Page count per book");
+
+		graph.append("g")
+			.attr("class", "x axis")
+		    .style("fill", "#8A8A8A")
+			.attr("transform", "translate(0," + (height) + ")")
+			.call(xaxis);
+
+		});
+
 }

@@ -1,11 +1,10 @@
 [
 { "name": "Mathematics & Statistics", "value": 390271 },
-{ "name": "Social Science", "value": 1133352 },
+{ "name": "Social Science", "value": 992659 },
 { "name": "Unlisted", "value": 4527654 },
 { "name": "Sports", "value": 73593 },
 { "name": "Travel", "value": 267258 },
-{ "name": "Fiction", "value": 1222050 },
-{ "name": "Romance", "value": 67501 },
+{ "name": "Fiction", "value": 1289551 },
 { "name": "Other", "value": 5247463 },
 { "name": "Health, Fitness", "value": 238761 },
 { "name": "Relationships", "value": 51679 },
@@ -28,5 +27,5 @@
 { "name": "Nonfiction", "value": 175639 },
 { "name": "ForeignLanguage", "value": 25555 },
 { "name": "Politics", "value": 1735517 },
-{ "name": "Education", "value": 382628 },
+{ "name": "Education", "value": 408580 },
 { "name": "Biography", "value": 618965 }]
