@@ -330,7 +330,13 @@ function bar_graph(){
 					.attr("dy", ".25em")
 					.attr("dx", ".25em")
 					.attr("transform", function(d){ return "translate(" + barwidth/2 + ","+ height +") rotate(-90)"; })
-					.text(function(d) {return d.name});
+					.text(function(d) {return d.name})
+				    .on("mouseover", function(d){
+					    	d3.select(this.parentNode.getElementsByTagName("rect")[0]).transition().attr("fill", "crimson");
+					    })
+				    .on("mouseout", function(d){
+					    	d3.select(this.parentNode.getElementsByTagName("rect")[0]).transition().attr("fill", function(d){ return color(d.value);});
+					    });;
 
 		graph.append("g")
 		      .attr("class", "y axis")

@@ -14,6 +14,12 @@ body {
 	width:500px;
 	height:75px;
 }
+footer {
+	width:90%;
+	margin-right:auto;
+	margin-left:auto;
+	margin-bottom:50px;
+}
 .title {
 	width:90%;
 	margin:0 auto;
@@ -33,10 +39,19 @@ hr {
 	border-top: 1px solid #8A8A8A;
 }
 
+a {
+	color:white;
+}
+
+.vis {
+	margin-right:auto;
+	margin-left:auto;
+}
+
 .gridx,
 .gridy {
 	shape-rendering : crispEdges;
-    stroke : #141414	;
+    stroke : #141414;
 	stroke-width : 1px;
 }
 .axis path,
