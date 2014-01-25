@@ -1,7 +1,7 @@
 
 var book_count_total = 23786660;
 var color = d3.scale.ordinal().range(["#19304D","#2E5D8A","#6285CB","#B6C9E7","#A0C0B6","#7EA993","#4D714B","#253729","#464931","#71684B","#958C50","#BFBD88","#B4632D","#8F3724","#85170F","#3D1431","#67225C","#76427B","#39846D","#48A883","#8DBF69","#DEE82C","#A2CB0B","#676E1C","#612C00","#452208","#45130C","#15281C","#19570A", "#D63600", "#A80000"]);
-var width =1000, //default graph width
+var width = 900, //default graph width
 height = 700; //default graph height
 
 
@@ -135,7 +135,8 @@ var bubble = d3.layout.pack()
 				.size([width, height])
 				.padding(1.5);
 
-var bubblegraph = d3.select("#catcount").append("svg")	
+var bubblegraph = d3.select("#catcount").append("svg")
+				.attr("viewBox","-15 55 920 600")
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class", "bubble");
@@ -199,7 +200,7 @@ function MouseOver(){
 		var percent = d3.select(that).data()[0].value/book_count_total;
 
 		var piegraph = d3.select("#catpie").append("svg")
-						.attr("width", 500)
+						.attr("width", 450)
 						.attr("height", height-100)
 						.attr("class", "info")
 					.append("g")
