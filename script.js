@@ -13,8 +13,8 @@ bar_graph();
 });
 
 function line_graph(){
-	var margin = {top:70, bottom:60, left:140, right:50};
-	var width = 1400; //overwrite default width
+	var margin = {top:70, bottom:60, left:100, right:50};
+	var width = 1300; //overwrite default width
 	d3.json("date_counts.json", function(root){
 		//init scale for x data to map range to the graph dimensions
 		var scalex = d3.scale.linear()
@@ -135,8 +135,9 @@ var bubble = d3.layout.pack()
 				.size([width, height])
 				.padding(1.5);
 
+console.log(document.getElementById("catcount").width);
 var bubblegraph = d3.select("#catcount").append("svg")
-				.attr("viewBox","-15 55 920 600")
+				.attr("viewBox","-10 55 920 600")
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class", "bubble");
@@ -275,8 +276,8 @@ function MouseOut(){
 
 
 function bar_graph(){
-	var margin = {top:50, bottom:50, left:180, right:15};
-	var width = 1100;
+	var margin = {top:50, bottom:50, left:70, right:15};
+	var width = 1000;
 	var scaler = d3.scale.linear()
 					.range([height-100,0]);
 

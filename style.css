@@ -6,34 +6,42 @@ body {
 
 .container{
 	float:left;
+	display:inline-block;
 }
 
 .2div {
 	margin:0 auto;
     width: 100%;
-    overflow:hidden;
+    overflow:auto;
 }
-
+#catcount{
+	width:65%;
+}
 #catpie{
+	width:35%;
 	margin-left:-20px;
 }
 
 #pieinfo {
+	margin:0 auto;
 	text-align:center;
 	font-size:20px;
-	width:500px;
+	width:50%;
 	height:75px;
 }
+
 footer {
 	width:90%;
 	margin-right:auto;
 	margin-left:auto;
 	margin-bottom:50px;
 }
+
 .title {
 	width:90%;
 	margin:0 auto;
 }
+
 header {
 	margin: 0 auto 30px;
 	width: 90%;
@@ -51,6 +59,13 @@ hr {
 
 a {
 	color:white;
+}
+
+svg {
+	display:block;
+	margin: auto;
+	position:relative;
+	left:-25px;
 }
 
 .vis {
